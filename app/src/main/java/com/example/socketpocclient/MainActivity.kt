@@ -9,11 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import io.socket.client.Socket
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var socket: Socket
     private lateinit var id: String
+    private var broadcastsCount = 0
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +46,8 @@ class MainActivity : AppCompatActivity() {
 
         socket.on("broadcast") {
             runOnUiThread {
-                Toast.makeText(applicationContext, "Broadcast is received ✅", Toast.LENGTH_SHORT).show()
+                broadcastsCount++
+                textViewCounter.text = "Broadcast count = $broadcastsCount"
             }
         }
 
@@ -59,6 +60,8 @@ class MainActivity : AppCompatActivity() {
         buttonSendVolatilePing.setOnClickListener { if (socket.connected()) socket.emit("ping") }
 
         buttonSendBroadcast.setOnClickListener { socket.emit("broadcast") }
+
+        buttonSendThousand.setOnClickListener { repeat(1000) {socket.emit("broadcast")} }
 
         buttonRunOnBackground.setOnClickListener {
             val intent = Intent(applicationContext, MyService::class.java)
