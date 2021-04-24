@@ -14,9 +14,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         try {
-            val options = IO.Options()
-            options.transports = arrayOf("websocket")
-            socket = IO.socket("http://10.0.2.2:3000", options)   // For emulator
+            socket = IO.socket("http://10.0.2.2:3000")   // For emulator
 //            socket = IO.socket("http://192.168.0.114:3000")   // For real device
         } catch (e: URISyntaxException) {
             throw RuntimeException(e)
